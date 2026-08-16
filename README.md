@@ -1,180 +1,440 @@
 # Axora ⚡
 
-Platform komunitas modern untuk builder Indonesia.  
-Stack: Next.js 15 · TypeScript · Tailwind · PostgreSQL · Prisma · Auth.js
+> A modern community platform for builders, developers, and creators.
+
+[🚀 Live Demo](https://axora-lake.vercel.app) · [📦 GitHub Repository](https://github.com/reyncore/axora)
+
+Axora is a full-stack social platform built for people who build things.
+
+It combines social networking, developer-focused communities, direct messaging,
+content discovery, bookmarks, notifications, media sharing, and progressive
+web app support into one platform.
 
 ---
 
-## 🚀 Quick Start
+## ✨ Features
 
-### 1. Clone & Install
+### 🏠 Social Platform
+
+- 📝 Create and manage posts
+- 💬 Replies and comments
+- ❤️ Like posts
+- 👥 Follow and unfollow users
+- 👤 Public user profiles
+- 🔎 Explore and search content
+- 📄 Paginated feeds
+
+### 💬 Communication
+
+- 💬 One-to-one direct messaging
+- 🔔 Real-time-ready notification architecture
+- 📢 Activity notifications
+- ⚙️ Notification preferences
+
+### 🔖 Bookmarks
+
+- 🔖 Save posts for later
+- 📚 Create bookmark collections
+- 🗂️ Organize saved content
+- 🌐 Public bookmark collections
+
+### 🖼️ Media
+
+- Image uploads
+- Video media support
+- GIF support
+- S3-compatible object storage
+- Cloudflare R2 support
+
+### ⚙️ Account & Personalization
+
+- 🔐 Authentication
+- 🔑 Password recovery
+- 👤 Profile management
+- 🎨 Appearance settings
+- 🌙 Dark / light / system theme
+- 🔔 Notification preferences
+
+### 🛡️ Platform & Moderation
+
+- Admin functionality
+- User moderation
+- Banned-user handling
+- Rate limiting
+- Input validation
+- Security headers
+- Protected API routes
+
+### 📱 Progressive Web App
+
+Axora is designed with PWA support so the platform can provide a more app-like experience on supported devices.
+
+---
+
+## 🧱 Tech Stack
+
+| Category | Technology |
+| --- | --- |
+| Framework | Next.js 15 |
+| Language | TypeScript |
+| UI | React |
+| Styling | Tailwind CSS |
+| Authentication | Auth.js |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Validation | Zod |
+| Media Storage | S3-compatible storage / Cloudflare R2 |
+| Runtime | Node.js |
+| Deployment | Vercel-compatible |
+| PWA | Web App Manifest / PWA support |
+
+---
+
+## 🏗️ Architecture
+
+Axora follows a full-stack Next.js architecture.
+
+```text
+┌───────────────────────────────────────────┐
+│                  Axora                    │
+├───────────────────────────────────────────┤
+│                                           │
+│              Next.js / React              │
+│                    │                      │
+│          ┌─────────┴─────────┐            │
+│          │                   │            │
+│       UI Layer           API Routes       │
+│          │                   │            │
+│          └─────────┬─────────┘            │
+│                    │                      │
+│               Business Logic              │
+│                    │                      │
+│          ┌─────────┴─────────┐            │
+│          │                   │            │
+│       Prisma             Storage          │
+│          │                   │            │
+│      PostgreSQL       S3 / Cloudflare R2  │
+│                                           │
+└───────────────────────────────────────────┘
+```
+
+---
+
+## 📁 Project Structure
+
+```text
+src/
+├── app/
+│   ├── (auth)/                  # Authentication pages
+│   ├── (main)/                  # Main application
+│   │   ├── bookmarks/           # Bookmarks & collections
+│   │   ├── explore/             # Explore & discovery
+│   │   ├── messages/            # Direct messages
+│   │   ├── notifications/       # Notifications
+│   │   ├── profile/             # User profiles
+│   │   ├── settings/            # Account & appearance settings
+│   │   └── ...
+│   │
+│   └── api/                     # API routes
+│
+├── components/                  # Reusable UI components
+├── hooks/                       # Custom React hooks
+├── lib/                         # Utilities & server logic
+└── types/                       # Shared TypeScript types
+```
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+Make sure you have:
+
+- Node.js 18+
+- PostgreSQL
+- npm
+- A configured object-storage provider for media
+- Required environment variables
+
+---
+
+## 1. Clone the repository
 
 ```bash
-git clone https://github.com/kamu/axora.git
+git clone https://github.com/reyncore/axora.git
 cd axora
 npm install
 ```
 
-### 2. Setup Database
+---
 
-**Opsi A — Supabase (recommended untuk MVP):**
-1. Buat project di [supabase.com](https://supabase.com)
-2. Settings → Database → Connection string → URI
-3. Copy ke `DATABASE_URL` di `.env.local`
+## 2. Configure environment variables
 
-**Opsi B — Local PostgreSQL:**
-```bash
-createdb axora
-# DATABASE_URL="postgresql://localhost:5432/axora"
-```
-
-### 3. Setup Environment
+Create your local environment file:
 
 ```bash
 cp .env.example .env.local
-# Edit .env.local dan isi semua variabel yang diperlukan
 ```
 
-Generate `NEXTAUTH_SECRET`:
+Then configure the required variables inside `.env.local`.
+
+Depending on your environment, Axora may require configuration for:
+
+- PostgreSQL
+- Authentication
+- Object storage
+- Cloudflare R2 / S3
+- Email
+- Redis / rate limiting
+- Application URL
+
+> Never commit `.env.local` or production credentials to Git.
+
+---
+
+## 3. Configure the database
+
+Make sure PostgreSQL is running and your `DATABASE_URL` points to the correct database.
+
+Example:
+
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/axora"
+```
+
+---
+
+## 4. Generate Prisma Client
+
 ```bash
-openssl rand -base64 32
+npm run db:generate
 ```
 
-### 4. Setup Prisma
+---
+
+## 5. Push the database schema
+
+For local development:
 
 ```bash
-npm run db:push      # Push schema ke database
-npm run db:generate  # Generate Prisma Client
-npm run db:seed      # Isi data dummy untuk development
+npm run db:push
 ```
 
-### 5. Jalankan
+If the project seed is configured:
+
+```bash
+npm run db:seed
+```
+
+---
+
+## 6. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000)
+Then open:
 
-**Test accounts (password: `Password123`):**
-- `reza@axora.dev`
-- `sari@axora.dev`
-- `adi@axora.dev`
-
----
-
-## 📁 Struktur Project
-
-```
-src/
-├── app/
-│   ├── (auth)/          # Login, Register (no sidebar)
-│   ├── (main)/          # Feed, Profile, Explore, Notif (with sidebar)
-│   └── api/             # REST API endpoints
-├── components/
-│   ├── ui/              # Design system primitives
-│   ├── feed/            # Feed & post components
-│   ├── layout/          # Sidebar, RightPanel
-│   └── profile/         # Profile components
-├── lib/                 # Utilities, config, helpers
-├── hooks/               # Custom React hooks
-└── types/               # TypeScript types
+```text
+http://localhost:3000
 ```
 
 ---
 
-## 🛠️ Commands
+# 🛠️ Development Commands
 
 ```bash
-npm run dev           # Development server (Turbopack)
-npm run build         # Production build
-npm run type-check    # TypeScript check tanpa build
+# Development
+npm run dev
 
-npm run db:push       # Sync schema ke DB (dev)
-npm run db:migrate    # Buat migration file (production)
-npm run db:studio     # Prisma Studio UI
-npm run db:seed       # Seed data dummy
-npm run db:reset      # Reset + re-seed (WARNING: hapus semua data!)
+# Production build
+npm run build
+
+# Type checking
+npm run type-check
+
+# Prisma
+npm run db:generate
+npm run db:push
+npm run db:migrate
+npm run db:studio
+npm run db:seed
+npm run db:reset
 ```
 
----
-
-## 🚢 Deploy ke Vercel + Supabase
-
-### Database (Supabase)
-1. [supabase.com](https://supabase.com) → New project
-2. Settings → Database → Connection string → copy `DATABASE_URL`
-3. Untuk production: gunakan **Transaction pooler** URL (port 6543)
-
-### App (Vercel)
-1. Push ke GitHub
-2. [vercel.com](https://vercel.com) → Import repo
-3. Environment Variables → tambahkan semua dari `.env.example`
-4. Deploy!
-
-### File Storage (Cloudflare R2)
-1. [dash.cloudflare.com](https://dash.cloudflare.com) → R2 → Create bucket `axora-media`
-2. Settings → Enable public access → set domain `media.axora.app`
-3. Manage R2 API tokens → Create token (Object Read & Write)
+> ⚠️ `db:reset` is destructive and should never be used against a production database.
 
 ---
 
-## 🔒 Security Notes
+# 🔐 Security
 
-- Password di-hash dengan **bcrypt cost factor 12**
-- Session JWT di **httpOnly cookie** (tidak bisa diakses JavaScript)
-- Semua input divalidasi dengan **Zod** sebelum masuk DB
-- File upload memverifikasi **magic bytes** (bukan hanya Content-Type)
-- **Soft delete** pada posts — data tidak langsung hilang dari DB
-- Rate limiting per user dan per IP
-- Security headers di setiap response
+Axora includes multiple application-level security mechanisms.
 
----
+### Authentication
 
-## 📋 API Endpoints
+- Auth.js-based authentication
+- Protected application routes
+- HTTP-only session cookies
+- Password hashing
 
-```
-POST  /api/auth/register              Daftar akun
-POST  /api/auth/[...nextauth]         Login/logout (Auth.js)
+### Input Security
 
-GET   /api/posts?type=home&cursor=    Feed posts (paginated)
-POST  /api/posts                      Buat post baru
-GET   /api/posts/:id                  Detail post
-DELETE/api/posts/:id                  Hapus post
-POST  /api/posts/:id/like             Toggle like
-GET   /api/posts/:id/comments         List komentar
-POST  /api/posts/:id/comments         Tambah komentar
+- Zod schema validation
+- Server-side validation
+- Authorization checks
+- Protected API endpoints
 
-GET   /api/users/:username            Profil user
-PATCH /api/users/:username            Update profil (owner only)
-POST  /api/users/:username/follow     Toggle follow
+### Upload Security
 
-GET   /api/notifications              List notifikasi
-PATCH /api/notifications              Mark all as read
+Uploaded media is validated server-side instead of relying only on the client-provided MIME type.
 
-POST  /api/upload                     Upload gambar (max 5MB)
-```
+### Rate Limiting
+
+Rate limiting is applied to sensitive operations to reduce abuse and automated attacks.
+
+### Additional Protection
+
+- Security response headers
+- User moderation
+- Ban handling
+- Soft deletion where applicable
+- Server-side authorization
 
 ---
 
-## 🗺️ Roadmap
+# 🗺️ Roadmap
 
-- [x] Auth (register/login)
-- [x] Feed (home + explore)
-- [x] Create/delete post
-- [x] Media upload (Cloudflare R2)
-- [x] Like & comment
-- [x] Follow/unfollow
+## ✅ Available
+
+- [x] Authentication
+- [x] Registration
+- [x] Password recovery
+- [x] Social feed
+- [x] Posts
+- [x] Replies
+- [x] Comments
+- [x] Likes
+- [x] Follow system
+- [x] User profiles
+- [x] Search / Explore
 - [x] Notifications
-- [x] Profile page
-- [ ] Full-text search (PostgreSQL tsvector)
-- [ ] Real-time notifications (SSE)
-- [ ] Email verifikasi (Resend)
-- [ ] Dark/light mode toggle
-- [ ] Mobile PWA
-- [ ] Admin panel
-- [ ] Analytics
+- [x] Notification preferences
+- [x] Direct messaging
+- [x] Bookmarks
+- [x] Bookmark collections
+- [x] Public collections
+- [x] Media uploads
+- [x] Image support
+- [x] Video support
+- [x] GIF support
+- [x] Account settings
+- [x] Appearance settings
+- [x] PWA support
+- [x] Admin / moderation features
+- [x] Rate limiting
+
+## 🚧 In Progress
+
+- [ ] Improve real-time communication
+- [ ] Improve real-time notification delivery
+- [ ] Improve search and discovery
+- [ ] Improve mobile experience
+- [ ] Improve platform performance
+
+## 🔮 Planned
+
+- [ ] Advanced creator features
+- [ ] Advanced community discovery
+- [ ] More moderation tools
+- [ ] Platform analytics
+- [ ] Additional integrations
+
+> The roadmap is subject to change as Axora evolves.
 
 ---
 
-Built with ☕ untuk komunitas developer Indonesia.
+# 🤝 Contributing
+
+Contributions, ideas, bug reports, and feedback are welcome.
+
+### Development workflow
+
+1. Fork the repository.
+2. Create a feature branch.
+
+```bash
+git checkout -b feature/my-feature
+```
+
+3. Make your changes.
+4. Run the relevant checks.
+
+```bash
+npm run type-check
+npm run build
+```
+
+5. Commit your changes.
+
+```bash
+git commit -m "feat: add my feature"
+```
+
+6. Push your branch.
+
+```bash
+git push origin feature/my-feature
+```
+
+7. Open a Pull Request.
+
+For larger features, opening an issue first is recommended so the implementation can be discussed before development begins.
+
+---
+
+# 🧭 Project Goals
+
+Axora is being built around a simple idea:
+
+> **Give builders a place to share what they are building, discover other builders, save useful resources, and have meaningful conversations.**
+
+The long-term goal is to create a community platform that is useful for:
+
+- 👨‍💻 Developers
+- 🎨 Creators
+- 🧑‍🎓 Students
+- 🚀 Indie hackers
+- 🛠️ Builders
+- 🌱 Open-source contributors
+
+---
+
+# 📌 Project Status
+
+Axora is an actively developed project.
+
+The platform is evolving rapidly, so APIs, database schemas, UI components, and features may change between versions.
+
+If you are experimenting with the project, use the latest version of the repository and check the documentation before deploying it to production.
+
+---
+
+# 📄 License
+
+A license has not yet been finalized for this repository.
+
+Until a license is added, do not assume that the code is available for unrestricted redistribution, modification, or commercial use.
+
+---
+
+# 👨‍💻 Author
+
+Built by **[reyncore](https://github.com/reyncore)**.
+
+---
+
+<p align="center">
+  Built with ☕, TypeScript, and a lot of debugging.
+</p>
